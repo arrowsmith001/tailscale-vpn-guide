@@ -1,0 +1,1054 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="wireguard-config/mullvad/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>How to use Tailscale + a commercial VPN on the same device</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-use-tailscale-a-commercial-vpn-on-the-same-device" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="How to use Tailscale + a commercial VPN on the same device" class="md-header__button md-logo" aria-label="How to use Tailscale + a commercial VPN on the same device" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            How to use Tailscale + a commercial VPN on the same device
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              How to use Tailscale + a commercial VPN on the same device
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="How to use Tailscale + a commercial VPN on the same device" class="md-nav__button md-logo" aria-label="How to use Tailscale + a commercial VPN on the same device" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    How to use Tailscale + a commercial VPN on the same device
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to use Tailscale + a commercial VPN on the same device
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to use Tailscale + a commercial VPN on the same device
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional requirement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution-outline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution outline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solution outline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-general-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The general idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#some-advantages-features-of-this-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Some advantages &amp; features of this setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-main-disadvantage-of-this-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The main disadvantage of this setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-step guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-step guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-relevant-packages-on-your-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install relevant packages on your server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-wireguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure wireguard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure wireguard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-1-obtain-the-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2-1: Obtain the configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-2-edit-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2-2: Edit the file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-save-network-config-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Save network config script
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-test-the-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Test the script
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-automate-script-with-systemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Automate script with systemd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wireguard config
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Wireguard config
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="wireguard-config/mullvad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mullvad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="wireguard-config/nord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nord
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional requirement
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solution-outline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution outline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solution outline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-general-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The general idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#some-advantages-features-of-this-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Some advantages &amp; features of this setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-main-disadvantage-of-this-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The main disadvantage of this setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-by-step-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step-by-step guide
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step-by-step guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-relevant-packages-on-your-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install relevant packages on your server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-wireguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Configure wireguard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure wireguard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-1-obtain-the-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2-1: Obtain the configuration file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-2-edit-the-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2-2: Edit the file
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-save-network-config-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Save network config script
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-test-the-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Test the script
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-automate-script-with-systemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Automate script with systemd
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="how-to-use-tailscale-a-commercial-vpn-on-the-same-device">How to use Tailscale + a commercial VPN on the same device</h1>
+<p><img alt="alt text" src="banner.png" /></p>
+<p>If you are a Tailscale user, you probably enjoy the benefit of having all your devices and services networked from anywhere in the world. If you are concerned with online privacy and censorship, you may also choose to use commercial VPNs, such as Mullvad, Nord, etc.</p>
+<p>The difficulty arises with using both simultaneously on a single device. They tend to conflict, killing your internet connectivity, and rendering one or both services useless. Is it even possible to get a working setup with both?</p>
+<p>Thankfully it is, but with some caveats.</p>
+<p>This article will outline:</p>
+<ul>
+<li>the requirements of the setup</li>
+<li>the general idea behind it, with advantages and disadvantages</li>
+<li>and a step-by-step guide on how to implement it yourself.</li>
+</ul>
+<h2 id="requirements">Requirements</h2>
+<h3 id="basic-requirements">Basic requirements</h3>
+<ul>
+<li>You will, of course, require <u><strong>a working Tailscale setup</strong></u>.</li>
+<li>You will also require <u><strong>a subscription to a commercial VPN that supports wireguard</strong></u> - the major VPNs tend to do so, but check that yours does!</li>
+</ul>
+<p>*This setup has been tested to work with both Mullvad and NordVPN. Of these two providers, obtaining the wireguard configuration file was easier with Mullvad.</p>
+<h3 id="additional-requirement">Additional requirement</h3>
+<p>Additionally, you will require <u><strong>a server/device</strong></u> which: </p>
+<ul>
+<li>is always-on</li>
+<li>has reliable internet connectivity</li>
+<li>is a Tailscale node on your tailnet</li>
+</ul>
+<p>This could be a VPS running in the cloud, an old laptop (or Raspberry Pi) sitting in a corner somewhere at home, or potentially even a NAS. By all means use an existing server if you already have one - we do not require much server real estate to do what we want - however, it must be connected to your tailnet.</p>
+<p>In this guide, I use a Linux server running Ubuntu 24.04. While many features of this guide will be specific to Linux, I hope to illustrate the broad ideas so you can hopefully adapt it to your setup.</p>
+<p>If you are able to fulfil this requirement, then read on to find out how you may implement this for yourself!</p>
+<h2 id="solution-outline">Solution outline</h2>
+<h3 id="the-general-idea">The general idea</h3>
+<p>Tailscale supports the use of a device as an "<a href="https://tailscale.com/docs/features/exit-nodes">exit node</a>". This means that when a device on a tailnet is being used as an exit node, it is responsible for handling all the internet traffic of a client device.</p>
+<p>In our setup, our server will be made available to be used as an exit node by any other device on our tailnet. Being an exit node, that server will, by definition, be handling that device's internet traffic.</p>
+<p>And crucially, with the addition of some network rules, we can also make that server pass through any tailscale traffic it receives straight through to the commercial VPN that sends it out to the wider internet.</p>
+<p>This fulfils the requirements of the setup. On any given device, you will fundamentally be using Tailscale as your VPN. But by using your server as an exit node, you will implicitly be using your commercial VPN to handle your internet traffic.</p>
+<h3 id="some-advantages-features-of-this-setup">Some advantages &amp; features of this setup</h3>
+<p>The main notable aspect of this setup, as per the initial motivation, is that it allows you to primarily use Tailscale as your VPN app, safe in the knowledge that your internet traffic is being routed through a commercial VPN in the background.</p>
+<p>A neat feature of this is that you can switch off your device's use of the commercial VPN by simply turning off your exit node, or using a different exit node.</p>
+<p>Another really cool aspect of this is that it gets around the device limit most VPN providers enforce. You only need one device with a commercial VPN connection - that being your server. Your other devices are only using that connection implicitly. Therefore, your one VPN connection is handling a whole tailnet's worth of devices - and even Tailscale's personal plan allows unlimited devices!</p>
+<p>And finally, particularly on mobile, you can take advantage of app split tunneling in Tailscale if - for whatever reason - you wish to exclude certain apps from using the VPN. Some commercial VPN apps have this anyway, but with Tailscale, you at least don't lose this crucial feature.</p>
+<h3 id="the-main-disadvantage-of-this-setup">The main disadvantage of this setup</h3>
+<p>This is a Tailscale-centred setup. By using it, you generally forfeit any specific features offered natively by the apps offered by your commercial VPN provider.</p>
+<p>This, unfortunately, includes convenient country-switching. We will be configuring the VPN on our own server using wireguard. Each configuration file specifies a particular VPN server in a particular country. This can be changed, of course, but requires you to log in to the server and mess around, which is usually less convenient than using the app.</p>
+<p>So before committing to it, check that this setup suits your individual needs! And if so, read on to find out how to implement this setup yourself step-by-step...</p>
+<h2 id="step-by-step-guide">Step-by-step guide</h2>
+<p>To summarize, we will first be obtaining the wireguard configuration file from our commercial VPN provider. </p>
+<p>Then we will configure and execute a shell script which sets up the appropriate network rules to fulfil our needs.</p>
+<p>Once we are convinced that everything is working as expected, we will automate the execution of that script on server startup using systemd. </p>
+<h3 id="step-1-install-relevant-packages-on-your-server">Step 1: Install relevant packages on your server</h3>
+<ul>
+<li><a href="https://www.wireguard.com/install/">Install wireguard</a> to enable use of the <code>wg-quick</code> command</li>
+<li>Verify that systemd is installed by running <code>systemctl --version</code></li>
+</ul>
+<blockquote>
+<p>If you do not have systemd for whatever reason, consider switching your Linux distribution to Ubuntu or something similar.</p>
+</blockquote>
+<h3 id="step-2-configure-wireguard">Step 2: Configure wireguard</h3>
+<h4 id="step-2-1-obtain-the-configuration-file">Step 2-1: Obtain the configuration file</h4>
+<p>The method for obtaining the wireguard configuration file will differ depending on what VPN service you use. You're looking to generate a file that looks like <a href="https://wiresock.net/documentation/wireguard/config.html#sample-configuration-for-a-server">this</a>.</p>
+<p>Below are links to all the documented ways that I know of to obtain this file, as of the time of writing this article. If your VPN service is <em>not</em> one of those listed below, try searching the documentation for your service for "wireguard configuration", or try searching for it in a search engine.</p>
+<blockquote>
+<p>Note: you will need to fetch this file whenever you want to switch servers, including switching to a server based in another country.</p>
+</blockquote>
+<ul>
+<li><a href="wireguard-config/mullvad/">Wireguard configuration for Mullvad</a></li>
+<li><a href="wireguard-config/nord/">Wireguard configuration for NordVPN</a> </li>
+</ul>
+<p>Save this file on your server under <code>/etc/wireguard/wg-vpn.conf</code>.</p>
+<h4 id="step-2-2-edit-the-file">Step 2-2: Edit the file</h4>
+<p>Add <code>Table = off</code> under the <code>[Interface]</code> section.
+<div class="highlight"><pre><span></span><code>[Interface]
+...
+Table = off
+</code></pre></div>
+Like so:
+<div class="highlight"><pre><span></span><code>[Interface]
+PrivateKey = &lt;server-private-key&gt;
+Address = 10.0.0.1/24
+ListenPort = 51820
+Table = off     # &lt;--------------- THIS LINE
+
+[Peer]
+PublicKey = &lt;client-public-key&gt;
+PresharedKey = &lt;preshared-key&gt;
+AllowedIPs = 10.0.0.2/32
+</code></pre></div></p>
+<blockquote>
+<p><em><strong>This is an absolutely crucial step</strong>, which if omitted will break your entire setup. There's no way around it - every time you obtain a new config file, you must make this small edit.</em></p>
+</blockquote>
+<h3 id="step-3-save-network-config-script">Step 3: Save network config script</h3>
+<p>It is possible to automate all the network configuration with one helpful script! </p>
+<p>Open your favourite editor:</p>
+<div class="highlight"><pre><span></span><code>sudo nano /usr/local/bin/ts-exitnode-vpn.sh
+</code></pre></div>
+<p>Paste the following content, and save:
+<div class="highlight"><pre><span></span><code>#!/bin/sh
+
+# Copy this to `/usr/local/bin/ts-exitnode-vpn.sh`, then reload daemon and restart ts-exitnode-vpn.service to apply
+
+# Public network interface &amp; public IP address, automatically determined
+PUB_IF=$(ip route get 1.1.1.1 | awk &#39;{for(i=1;i&lt;=NF;i++) if($i==&quot;dev&quot;) print $(i+1)}&#39;)
+PUB_IP=$(ip addr show dev &quot;$PUB_IF&quot; | awk &#39;/inet / {print $2}&#39; | cut -d/ -f1)          
+
+SSH_PORT=22                            # SSH port - by default this should be 22. If it&#39;s different for you, change this!
+TAILSCALE_IF=&quot;tailscale0&quot;              # Tailscale network interface
+TAILSCALE_SUBNET=&quot;100.64.0.0/10&quot;       # Tailscale subnet
+
+VPN_TABLE=&quot;vpn&quot;                           # Custom routing table
+VPN_IF=&quot;wg-vpn&quot;                           # WireGuard interface
+VPN_CONF=&quot;/etc/wireguard/$VPN_IF.conf&quot;    # The location of your config file
+
+# Automatically extract the VPN peer IP from the Endpoint line in the config
+VPN_PEER=$(grep &#39;^Endpoint&#39; &quot;$VPN_CONF&quot; | \
+           cut -d&#39;=&#39; -f2 | \
+           cut -d&#39;:&#39; -f1 | \
+           tr -d &#39; &#39;)
+
+# ----------------- ENABLE IP FORWARDING -----------------
+sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv4.conf.all.rp_filter=0
+sysctl -w net.ipv4.conf.default.rp_filter=0
+
+# ----------------- START WIREGUARD -----------------
+wg-quick up $VPN_IF
+
+# Automatically determines the new public IP address of your server, assigned by the VPN service
+VPN_ADDR=$(ip -4 addr show dev &quot;$VPN_IF&quot; | awk &#39;/inet / {print $2}&#39; | cut -d/ -f1)  
+
+# ----------------- CREATE VPN ROUTING TABLE -----------------
+TABLE_ID=200
+grep -q &quot; $VPN_TABLE&quot; /etc/iproute2/rt_tables 2&gt;/dev/null || \
+echo &quot;$TABLE_ID $VPN_TABLE&quot; &gt;&gt; /etc/iproute2/rt_tables
+ip route replace default dev &quot;$VPN_IF&quot; table &quot;$VPN_TABLE&quot;
+
+# ----------------- PROTECT SSH -----------------
+iptables -t mangle -A OUTPUT -p tcp --sport $SSH_PORT -j MARK --set-mark 1
+ip rule add fwmark 1 lookup main priority 50
+
+# ----------------- MARK EXIT-NODE TRAFFIC -----------------
+# Any packet from Tailscale subnet entering tailscale0 is marked
+iptables -t mangle -A PREROUTING -i $TAILSCALE_IF -s $TAILSCALE_SUBNET -j MARK --set-mark 2
+
+# ----------------- POLICY ROUTING FOR EXIT-NODE -----------------
+ip rule add fwmark 2 lookup $VPN_TABLE priority 100
+
+# ----------------- FORWARDING RULES -----------------
+# Allow Tailscale -&gt; VPN
+iptables -A FORWARD -i $TAILSCALE_IF -o $VPN_IF -j ACCEPT
+# Allow VPN -&gt; Tailscale return traffic
+iptables -A FORWARD -i $VPN_IF -o $TAILSCALE_IF -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# ----------------- NAT (MASQUERADE) -----------------
+# Ensure exit-node traffic leaving VPN interface is NATed
+iptables -t nat -A POSTROUTING -o $VPN_IF -s $TAILSCALE_SUBNET -j MASQUERADE
+
+# ----------------- EXCLUDE VPN ENDPOINT -----------------
+# Allow packets to VPN server to bypass routing
+iptables -t mangle -A OUTPUT -d $VPN_PEER/32 -j MARK --set-mark 0
+</code></pre></div></p>
+<h3 id="step-4-test-the-script">Step 4: Test the script</h3>
+<p>Before we automate the script to execute at system boot, we should test it first.</p>
+<p>First, advertise your server as an exit node for your tailnet. On the server, run:
+<div class="highlight"><pre><span></span><code>sudo tailscale up --advertise-exit-node
+</code></pre></div></p>
+<p>Then, let's execute that script:
+<div class="highlight"><pre><span></span><code>sudo sh -x /usr/local/bin/ts-exitnode-vpn.sh
+</code></pre></div></p>
+<p>Next, <u><strong>choose another device on your tailnet</strong></u> that will use your server as an exit node. Ideally, this device should be one where it is convenient to run terminal commands on.</p>
+<p>Run the following command on your device to baseline the public IP address:
+<div class="highlight"><pre><span></span><code>curl icanhazip.com
+</code></pre></div></p>
+<p>Next, <u><strong>set your server as the exit node</strong></u> for that device:
+<div class="highlight"><pre><span></span><code>sudo tailscale set --exit-node=YOUR_SERVER_TAILNET_NAME
+</code></pre></div></p>
+<p>Finally, run that earlier command on your device one more time:</p>
+<div class="highlight"><pre><span></span><code>curl icanhazip.com
+</code></pre></div>
+<p>Your IP address should now be different to before, indicating that the VPN tunnel is working!</p>
+<p>For extra confirmation, visit <a href="https://whatismyipaddress.com/">https://whatismyipaddress.com/</a> in your browser to confirm that your IP location has changed to the country you expect.</p>
+<blockquote>
+<p>If the final <code>curl</code> command fails, or hangs indefinitely, something has gone wrong. Rebooting your server will erase the effects of the script, so you can troubleshoot and try again.</p>
+</blockquote>
+<h3 id="step-5-automate-script-with-systemd">Step 5: Automate script with systemd</h3>
+<p><div class="highlight"><pre><span></span><code>sudo nano /etc/systemd/system/ts-exitnode-vpn.service
+</code></pre></div>
+Paste this content:
+<div class="highlight"><pre><span></span><code>[Unit]
+Description=Tailscale Exit Node via VPN
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ts-exitnode-vpn.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+</code></pre></div>
+Next, reload the systemd daemon and enable the service:
+<div class="highlight"><pre><span></span><code>sudo systemctl daemon-reload
+sudo systemctl enable ts-exitnode-vpn.service
+</code></pre></div>
+The script should now run whenever the server boots.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
