@@ -1,0 +1,10 @@
+site_name: How to use Tailscale + a commercial VPN on the same device
+site_url: ""
+theme:
+  name: material
+  features:
+    - content.code.copy
+markdown_extensions:
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
