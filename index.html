@@ -437,6 +437,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#changing-vpn-countryserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changing VPN country/server
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -770,6 +781,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#changing-vpn-countryserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changing VPN country/server
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -809,7 +831,9 @@
 <li>You will, of course, require <u><strong>a working Tailscale setup</strong></u>.</li>
 <li>You will also require <u><strong>a subscription to a commercial VPN that supports wireguard</strong></u> - the major VPNs tend to do so, but check that yours does!</li>
 </ul>
-<p>*This setup has been tested to work with both Mullvad and NordVPN. Of these two providers, obtaining the wireguard configuration file was easier with Mullvad.</p>
+<blockquote>
+<p>This setup has been tested to work with both Mullvad and NordVPN. Of these two providers, obtaining the wireguard configuration file was easier with Mullvad.</p>
+</blockquote>
 <h3 id="additional-requirement">Additional requirement</h3>
 <p>Additionally, you will require <u><strong>a server/device</strong></u> which: </p>
 <ul>
@@ -818,7 +842,7 @@
 <li>is a Tailscale node on your tailnet</li>
 </ul>
 <p>This could be a VPS running in the cloud, an old laptop (or Raspberry Pi) sitting in a corner somewhere at home, or potentially even a NAS. By all means use an existing server if you already have one - we do not require much server real estate to do what we want - however, it must be connected to your tailnet.</p>
-<p>In this guide, I use a Linux server running Ubuntu 24.04. While many features of this guide will be specific to Linux, I hope to illustrate the broad ideas so you can hopefully adapt it to your setup.</p>
+<p>In this guide, I use a Linux server running Ubuntu 24.04. While many features of this guide will be specific to Linux, I hope to illustrate the broad ideas so you can adapt it to your setup.</p>
 <p>If you are able to fulfil this requirement, then read on to find out how you may implement this for yourself!</p>
 <h2 id="solution-outline">Solution outline</h2>
 <h3 id="the-general-idea">The general idea</h3>
@@ -913,7 +937,8 @@ sysctl -w net.ipv4.ip_forward=1
 sysctl -w net.ipv4.conf.all.rp_filter=0
 sysctl -w net.ipv4.conf.default.rp_filter=0
 
-# ----------------- START WIREGUARD -----------------
+# ----------------- (RE)START WIREGUARD -----------------
+wg-quick down $VPN_IF   # brings down wireguard in case it is already running
 wg-quick up $VPN_IF
 
 # Automatically determines the new public IP address of your server, assigned by the VPN service
@@ -995,6 +1020,13 @@ Next, reload the systemd daemon and enable the service:
 sudo systemctl enable ts-exitnode-vpn.service
 </code></pre></div>
 The script should now run whenever the server boots.</p>
+<h3 id="changing-vpn-countryserver">Changing VPN country/server</h3>
+<p>To change to a different VPN server that the wireguard service uses, simply retrieve a new .conf file, and overwrite the existing file:
+<div class="highlight"><pre><span></span><code>cp my-new-config.conf /etc/wireguard/wg-vpn.conf
+</code></pre></div>
+Then restart the service, which re-runs the script from earlier:
+<div class="highlight"><pre><span></span><code>systemctl restart ts-exitnode-vpn.service
+</code></pre></div></p>
 
 
 
