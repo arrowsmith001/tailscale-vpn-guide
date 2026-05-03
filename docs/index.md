@@ -21,7 +21,7 @@ This article will outline:
 - You will, of course, require <u>**a working Tailscale setup**</u>.
 - You will also require <u>**a subscription to a commercial VPN that supports wireguard**</u> - the major VPNs tend to do so, but check that yours does!
 
-*This setup has been tested to work with both Mullvad and NordVPN. Of these two providers, obtaining the wireguard configuration file was easier with Mullvad.
+> This setup has been tested to work with both Mullvad and NordVPN. Of these two providers, obtaining the wireguard configuration file was easier with Mullvad.
 
 ### Additional requirement
 
@@ -33,7 +33,7 @@ Additionally, you will require <u>**a server/device**</u> which:
 
 This could be a VPS running in the cloud, an old laptop (or Raspberry Pi) sitting in a corner somewhere at home, or potentially even a NAS. By all means use an existing server if you already have one - we do not require much server real estate to do what we want - however, it must be connected to your tailnet.
 
-In this guide, I use a Linux server running Ubuntu 24.04. While many features of this guide will be specific to Linux, I hope to illustrate the broad ideas so you can hopefully adapt it to your setup.
+In this guide, I use a Linux server running Ubuntu 24.04. While many features of this guide will be specific to Linux, I hope to illustrate the broad ideas so you can adapt it to your setup.
 
 If you are able to fulfil this requirement, then read on to find out how you may implement this for yourself!
 
@@ -160,7 +160,8 @@ sysctl -w net.ipv4.ip_forward=1
 sysctl -w net.ipv4.conf.all.rp_filter=0
 sysctl -w net.ipv4.conf.default.rp_filter=0
 
-# ----------------- START WIREGUARD -----------------
+# ----------------- (RE)START WIREGUARD -----------------
+wg-quick down $VPN_IF   # brings down wireguard in case it is already running
 wg-quick up $VPN_IF
 
 # Automatically determines the new public IP address of your server, assigned by the VPN service
@@ -262,3 +263,14 @@ sudo systemctl daemon-reload
 sudo systemctl enable ts-exitnode-vpn.service
 ```
 The script should now run whenever the server boots.
+
+### Changing VPN country/server
+
+To change to a different VPN server that the wireguard service uses, simply retrieve a new .conf file, and overwrite the existing file:
+```
+cp my-new-config.conf /etc/wireguard/wg-vpn.conf
+``` 
+Then restart the service, which re-runs the script from earlier:
+```
+systemctl restart ts-exitnode-vpn.service
+```
