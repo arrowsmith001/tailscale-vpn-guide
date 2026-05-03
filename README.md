@@ -4,4 +4,4 @@
 
 A guide for creating a VPN tunnel within a Tailscale exit node using Wireguard, to enable usage of a commercial VPN while primarily using Tailscale.
 
-[https://arrowsmith001.github.io/tailscale-vpn-guide/](Read the full documentation here!)
+[Read the full documentation here!](https://arrowsmith001.github.io/tailscale-vpn-guide)
